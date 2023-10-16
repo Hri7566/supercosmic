@@ -1,14 +1,13 @@
 import EventEmitter from "events";
-
-export abstract class ServiceAgent extends EventEmitter {
-	constructor() {
-		super();
-	}
-
-	public abstract start(): void;
-	public abstract stop(): void;
-}
+import { MPPAgent } from "./mpp";
+import env from "../util/env";
+import { ServiceAgent } from "./ServiceAgent";
 
 export class ServiceLoader {
-	public static loadServices() {}
+	public static agents = new Array<ServiceAgent<unknown>>();
+
+	public static loadServices() {
+		const testAgent = new MPPAgent("wss://mppclone.com", env.MPPNET_TOKEN);
+		testAgent.start();
+	}
 }
