@@ -1,5 +1,8 @@
 import z from "zod";
 import { createEnv } from "@t3-oss/env-core";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 export const env = createEnv({
 	isServer: true,

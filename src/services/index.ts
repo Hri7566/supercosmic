@@ -7,7 +7,11 @@ export class ServiceLoader {
 	public static agents = new Array<ServiceAgent<unknown>>();
 
 	public static loadServices() {
-		const testAgent = new MPPAgent("wss://mppclone.com", env.MPPNET_TOKEN);
+		const testAgent = new MPPAgent(
+			"wss://smnmpp.hri7566.info:8448",
+			env.MPPNET_TOKEN
+		);
+
 		testAgent.start();
 	}
 }
