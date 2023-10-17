@@ -8,7 +8,7 @@ export class ServiceLoader {
 
 	public static loadServices() {
 		const testAgent = new MPPAgent(
-			"wss://smnmpp.hri7566.info:8448",
+			"wss://mppclone.com:8443",
 			env.MPPNET_TOKEN
 		);
 

@@ -1,11 +1,16 @@
 import Client from "mpp-client-net";
 import { ServiceAgent } from "../ServiceAgent";
+import { ptr } from "bun:ffi";
+
+let p;
 
 export class MPPAgent extends ServiceAgent<Client> {
 	public desiredUser = {
-		name: "🟇 𝙎𝙪𝙥𝙚𝙧 Cosmic (*help)",
+		name: "🟇 𝙎𝙪𝙥𝙚𝙧 Cosmic (no commands yet)",
 		color: "#1d0054"
 	};
+
+	public desiredChannel = "nothing";
 
 	constructor(uri: string, token: string) {
 		const cl = new Client(uri, token);
@@ -14,8 +19,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 
 	public start() {
 		this.client.start();
-		// TODO get rid of this gay shit
-		this.client.setChannel("blackmidi (huge lag)");
 	}
 
 	public stop() {
@@ -27,23 +30,32 @@ export class MPPAgent extends ServiceAgent<Client> {
 
 		this.client.on("hi", msg => {
 			this.emit("log", msg.u);
+			this.client.setChannel(this.desiredChannel);
+
+			console.log(
+				msg.u.name !== this.desiredUser.name ||
+					msg.u.color !== this.desiredUser.color
+			);
 
 			if (
 				msg.u.name !== this.desiredUser.name ||
 				msg.u.color !== this.desiredUser.color
 			) {
+				// setTimeout(() => {
 				this.client.sendArray([
 					{
 						m: "userset",
 						set: this.desiredUser
 					}
 				]);
+				// }, 1000);
 			}
 		});
 
 		this.client.on("a", msg => {
-			const argv = msg.a.split(" ");
-			const argc = argv.length;
+			p = ptr(new TextEncoder().encode(msg.a).buffer);
+			// handleCommand(p);
+			console.log(`${msg.p.name}: ${msg.a}`);
 		});
 	}
 }
