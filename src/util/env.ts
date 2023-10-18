@@ -7,7 +7,8 @@ configDotenv();
 export const env = createEnv({
 	isServer: true,
 	server: {
-		MPPNET_TOKEN: z.string()
+		MPPNET_TOKEN: z.string(),
+		CHATBOX_LICENSE_KEY: z.string()
 	},
 	runtimeEnv: process.env
 });
