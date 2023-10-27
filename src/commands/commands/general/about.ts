@@ -1,10 +1,10 @@
 import { Command } from "../../Command";
 
-export const help = new Command(
+export const about = new Command(
 	"about",
 	["about", "info"],
 	"get about bozo",
-	"{prefix}about",
+	"about",
 	(msg, agent) => {
 		return `This is a dumb chat bot`;
 	}

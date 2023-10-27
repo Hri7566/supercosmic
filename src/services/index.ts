@@ -17,6 +17,31 @@ const config = loadConfig("config/services.yml", {
 	enableSwitchChat: false
 });
 
+interface MPPNetConfig {
+	desiredUser: {
+		name: string;
+		color: string;
+	};
+	agents: Record<
+		string,
+		{ id: string; overrideToken?: string; overrideName?: string }[]
+	>;
+}
+
+const mppConfig = loadConfig<MPPNetConfig>("config/mpp_net_channels.yml", {
+	desiredUser: {
+		name: "🟇 𝙎𝙪𝙥𝙚𝙧 Cosmic (*help)",
+		color: "#1d0054"
+	},
+	agents: {
+		"wss://mppclone.com": [
+			{
+				id: "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧"
+			}
+		]
+	}
+});
+
 export class ServiceLoader {
 	public static agents = new Array<ServiceAgent<unknown>>();
 
@@ -26,14 +51,24 @@ export class ServiceLoader {
 
 	public static loadServices() {
 		if (config.enableMPP) {
-			// TODO Implement URI and channel configuration
-			const testAgent = new MPPAgent(
-				"wss://mppclone.com:8443",
-				env.MPPNET_TOKEN
-			);
+			for (const uri of Object.keys(mppConfig.agents)) {
+				for (const channel of mppConfig.agents[uri]) {
+					const mppAgent = new MPPAgent(
+						uri,
+						channel.id,
+						channel.overrideName
+							? {
+									name: channel.overrideName,
+									color: mppConfig.desiredUser.color
+							  }
+							: mppConfig.desiredUser,
+						env.MPPNET_TOKEN
+					);
 
-			testAgent.start();
-			this.addAgent(testAgent);
+					mppAgent.start();
+					this.addAgent(mppAgent);
+				}
+			}
 		}
 
 		if (config.enableSwitchChat) {

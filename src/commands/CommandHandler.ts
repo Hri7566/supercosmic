@@ -1,15 +1,31 @@
+import { Inventory, User } from "@prisma/client";
+import { createUser, readUser } from "../data/user";
 import { ServiceAgent } from "../services/ServiceAgent";
 import { Command } from "./Command";
 import { CommandGroup } from "./CommandGroup";
 import { Prefix } from "./Prefix";
+import { createInventory, readInventory } from "../data/inventory";
 
 export interface CommandMessage<T = unknown> {
 	m: "command";
 	a: string;
 	argv: string[];
 	argc: number;
+	p: {
+		_id: string;
+		platformId: string;
+		name: string;
+		color: string;
+	};
 	originalMessage: T;
+	user: NonNullable<User>;
+	inventory: NonNullable<Inventory>;
 }
+
+export type BaseCommandMessage<T = unknown> = Omit<
+	CommandMessage<T>,
+	"user" | "inventory"
+>;
 
 export class CommandHandler {
 	public static commandGroups = new Array<CommandGroup>();
@@ -29,9 +45,39 @@ export class CommandHandler {
 	}
 
 	public static async handleCommand(
-		msg: CommandMessage,
+		msg: Omit<CommandMessage, "user" | "inventory">,
 		agent: ServiceAgent<unknown>
 	) {
+		// Get user data
+		let user = await readUser(msg.p._id);
+
+		if (!user) {
+			await createUser({
+				id: msg.p._id,
+				platform: agent.platform,
+				platformId: msg.p.platformId,
+				name: msg.p.name
+			});
+
+			user = await readUser(msg.p._id);
+			if (!user)
+				return "Somehow, something has gone terribly wrong and I can't create user data for you. I can't run your command now.";
+		}
+
+		// Get inventory data
+		let inventory = await readInventory(msg.p._id);
+
+		if (!inventory) {
+			await createInventory({
+				userId: msg.p._id,
+				items: []
+			});
+
+			inventory = await readInventory(msg.p._id);
+			if (!inventory)
+				return "You have no inventory and I have been told I can't give you one. Sorry, your command won't work without it.";
+		}
+
 		let usedPrefix: Prefix | undefined;
 
 		for (const prefix of this.prefixes) {
@@ -40,6 +86,7 @@ export class CommandHandler {
 
 				if (prefix.spaced) {
 					msg.argv.splice(0, 1);
+					msg.argc--;
 				}
 
 				break;
@@ -67,8 +114,11 @@ export class CommandHandler {
 
 		if (!usedCommand) return;
 
+		(msg as CommandMessage).user = user;
+		(msg as CommandMessage).inventory = inventory;
+
 		try {
-			const out = usedCommand.callback(msg, agent);
+			const out = usedCommand.callback(msg as CommandMessage, agent);
 			if (out) return out;
 		} catch (err) {
 			console.error(err);

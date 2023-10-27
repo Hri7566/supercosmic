@@ -1,4 +1,8 @@
-import { CommandHandler, CommandMessage } from "../../commands/CommandHandler";
+import {
+	BaseCommandMessage,
+	CommandHandler,
+	CommandMessage
+} from "../../commands/CommandHandler";
 import { loadConfig } from "../../util/config";
 import { ServiceAgent } from "../ServiceAgent";
 import { Client } from "switchchat";
@@ -15,7 +19,7 @@ export class SwitchChatAgent extends ServiceAgent<Client> {
 
 	constructor(token: string) {
 		const cl = new Client(token);
-		super(cl);
+		super("mc", cl);
 
 		this.client.defaultName = this.desiredUser.name;
 		this.client.defaultFormattingMode = "markdown";
@@ -41,12 +45,18 @@ export class SwitchChatAgent extends ServiceAgent<Client> {
 				} ${cmd.args.join(" ")}`
 			);
 
-			const message: CommandMessage = {
+			const message: BaseCommandMessage = {
 				m: "command",
 				a: `${cmd.command} ${cmd.args.join(" ")}`,
 				argc: cmd.args.length + 1,
 				argv: [cmd.command, ...cmd.args],
-				originalMessage: cmd
+				originalMessage: cmd,
+				p: {
+					_id: "MC_" + cmd.user.uuid,
+					name: cmd.user.displayName,
+					color: "#000000",
+					platformId: cmd.user.uuid
+				}
 			};
 
 			const out = await CommandHandler.handleCommand(message, this);
@@ -54,8 +64,8 @@ export class SwitchChatAgent extends ServiceAgent<Client> {
 			if (out) await this.client.tell(cmd.user.name, out);
 		});
 
-		this.client.on("rawraw", data => {
-			console.log(data);
-		});
+		// this.client.on("rawraw", data => {
+		// 	console.log(data);
+		// });
 	}
 }
