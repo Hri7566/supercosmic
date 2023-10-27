@@ -6,6 +6,12 @@ To install dependencies:
 bun install
 ```
 
+Copy envorionment variables:
+
+```bash
+cp .env.template .env
+```
+
 To run:
 
 ```bash
