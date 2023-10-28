@@ -3,4 +3,5 @@ desiredUser:
     color: "#1d0054"
 agents:
     wss://mppclone.com:
-        - id: "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧"
+        # - id: "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧"
+        - id: "wizardposting"
