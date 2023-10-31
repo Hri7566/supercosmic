@@ -1,4 +1,4 @@
-enableMPP: true
+enableMPP: false
 enableDiscord: false
 enableConsole: true
-enableSwitchChat: false
+enableSwitchChat: true
