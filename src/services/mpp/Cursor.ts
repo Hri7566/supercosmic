@@ -290,7 +290,6 @@ export class Cursor {
 						this.props.position.y <= 0
 					) {
 						this.props.velocity.y = -this.props.velocity.y;
-						console.log(this.props.velocity, "setting!!!");
 					}
 
 					this.props.ot = Date.now();

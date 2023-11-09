@@ -8,6 +8,7 @@ import { math } from "./commands/utility/math";
 import { memory } from "./commands/utility/memory";
 import { cursor } from "./commands/utility/cursor";
 import { inventory } from "./commands/economy/inventory";
+import { color } from "./commands/utility/color";
 
 export function loadCommands() {
 	const general = new CommandGroup("general", "⭐ General");
@@ -19,6 +20,6 @@ export function loadCommands() {
 	CommandHandler.addCommandGroup(economy);
 
 	const utility = new CommandGroup("utility", "🔨 Utility");
-	utility.addCommands([math, memory, id, msg, cursor]);
+	utility.addCommands([math, memory, id, msg, cursor, color]);
 	CommandHandler.addCommandGroup(utility);
 }

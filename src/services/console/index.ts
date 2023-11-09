@@ -19,6 +19,7 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 	};
 
 	public logger = new Logger("Console");
+	public viewAgent: ServiceAgent<unknown> | undefined;
 
 	constructor() {
 		const cl = readline.createInterface({
@@ -67,7 +68,7 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 			let out;
 
 			if (text.startsWith("/")) {
-				out = await MicroHandler.handleMicroCommand(message);
+				out = await MicroHandler.handleMicroCommand(message, this);
 			} else {
 				out = await CommandHandler.handleCommand(message, this);
 			}

@@ -14,7 +14,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 	) {
 		const cl = new Client(uri, token);
 		super("mpp", cl);
-		this.emit("log", desiredChannel);
 		this.cursor = new Cursor(this);
 	}
 
@@ -30,7 +29,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 		super.bindEventListeners();
 
 		this.client.on("hi", msg => {
-			this.emit("log", msg.u);
 			this.client.setChannel(this.desiredChannel);
 			this.fixUser();
 		});
@@ -40,7 +38,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 		});
 
 		this.client.on("a", async msg => {
-			console.log(`${msg.p.name}: ${msg.a}`);
 			let args = msg.a.split(" ");
 
 			const str = await CommandHandler.handleCommand(
