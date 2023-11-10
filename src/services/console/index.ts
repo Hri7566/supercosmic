@@ -73,7 +73,11 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 				out = await CommandHandler.handleCommand(message, this);
 			}
 
-			if (out) this.logger.info(out);
+			if (out) {
+				this.logger.info(out);
+			} else {
+				this.emit("send chat", message.a);
+			}
 			this.client.prompt();
 		});
 	}
