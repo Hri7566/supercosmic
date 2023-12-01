@@ -8,7 +8,9 @@ export const id = new Command(
 	"id",
 	(msg, agent) => {
 		if (!(agent as MPPAgent).client.isConnected) return;
-		return `ID: \`${(msg.originalMessage as any).p._id}\``;
+		return `ID: \`${(msg.originalMessage as any).p._id}\` Cosmic ID: \`${
+			msg.p._id
+		}\``;
 	},
 	false
 );

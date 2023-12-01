@@ -5,6 +5,7 @@ import { ServiceAgent } from "./ServiceAgent";
 import { loadConfig } from "../util/config";
 import { z } from "zod";
 import { SwitchChatAgent } from "./switchchat";
+import { ConsoleAgent } from "./console";
 
 /**
  * Services are anything (any platforms or environments) that the bot will directly communicate to users with
@@ -78,6 +79,13 @@ export class ServiceLoader {
 
 			switchChatAgent.start();
 			this.addAgent(switchChatAgent);
+		}
+
+		if (config.enableConsole) {
+			const consoleAgent = new ConsoleAgent();
+
+			consoleAgent.start();
+			this.addAgent(consoleAgent);
 		}
 	}
 }

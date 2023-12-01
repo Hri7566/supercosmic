@@ -2,6 +2,7 @@ import Client from "mpp-client-net";
 import { ServiceAgent } from "../ServiceAgent";
 import { CommandHandler } from "../../commands/CommandHandler";
 import { Cursor } from "./Cursor";
+import { ChatMessage } from "../console/MicroHandler";
 
 export class MPPAgent extends ServiceAgent<Client> {
 	public cursor: Cursor;
@@ -14,7 +15,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 	) {
 		const cl = new Client(uri, token);
 		super("mpp", cl);
-		this.emit("log", desiredChannel);
 		this.cursor = new Cursor(this);
 	}
 
@@ -30,7 +30,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 		super.bindEventListeners();
 
 		this.client.on("hi", msg => {
-			this.emit("log", msg.u);
 			this.client.setChannel(this.desiredChannel);
 			this.fixUser();
 		});
@@ -40,7 +39,20 @@ export class MPPAgent extends ServiceAgent<Client> {
 		});
 
 		this.client.on("a", async msg => {
-			console.log(`${msg.p.name}: ${msg.a}`);
+			const _id = "MPP_" + this.client.uri + "_" + msg.p._id;
+
+			this.emit("chat", {
+				m: "a",
+				a: msg.a,
+				p: {
+					_id,
+					name: msg.p.name,
+					color: msg.p.color,
+					platformId: msg.p._id
+				},
+				originalMessage: msg
+			} as ChatMessage);
+
 			let args = msg.a.split(" ");
 
 			const str = await CommandHandler.handleCommand(
@@ -50,7 +62,7 @@ export class MPPAgent extends ServiceAgent<Client> {
 					argc: args.length,
 					argv: args,
 					p: {
-						_id: "MPP_" + this.client.uri + "_" + msg.p._id,
+						_id,
 						name: msg.p.name,
 						color: msg.p.color,
 						platformId: msg.p._id
@@ -73,14 +85,18 @@ export class MPPAgent extends ServiceAgent<Client> {
 						]);
 					}
 				} else {
-					this.client.sendArray([
-						{
-							m: "a",
-							message: `\u034f${str}`
-						}
-					]);
+					this.emit("send chat", str);
 				}
 			}
+		});
+
+		this.on("send chat", text => {
+			this.client.sendArray([
+				{
+					m: "a",
+					message: `\u034f${text}`
+				}
+			]);
 		});
 	}
 

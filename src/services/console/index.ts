@@ -1,25 +1,33 @@
-import { CommandHandler, CommandMessage } from "../../commands/CommandHandler";
+import {
+	BaseCommandMessage,
+	CommandHandler
+} from "../../commands/CommandHandler";
 import { loadConfig } from "../../util/config";
 import { ServiceAgent } from "../ServiceAgent";
 import readline from "readline";
+import { MicroHandler } from "./MicroHandler";
+import { Logger } from "../../util/Logger";
 
 const config = loadConfig("config/switchchat.yml", {
 	ownerOnly: false
 });
 
-export class SwitchChatAgent extends ServiceAgent<readline.ReadLine> {
+export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 	public desiredUser = {
 		name: "🟇 𝙎𝙪𝙥𝙚𝙧 Cosmic",
 		color: "#1d0054"
 	};
 
-	constructor(token: string) {
+	public logger = new Logger("Console");
+	public viewAgent: ServiceAgent<unknown> | undefined;
+
+	constructor() {
 		const cl = readline.createInterface({
 			input: process.stdin,
 			output: process.stdout
 		});
 
-		super(cl);
+		super("console", cl);
 	}
 
 	public started = false;
@@ -27,7 +35,7 @@ export class SwitchChatAgent extends ServiceAgent<readline.ReadLine> {
 	public start() {
 		if (this.started) return;
 		this.started = true;
-		this.client.setPrompt(">");
+		this.client.setPrompt("> ");
 		this.client.prompt(true);
 	}
 
@@ -40,26 +48,37 @@ export class SwitchChatAgent extends ServiceAgent<readline.ReadLine> {
 	protected bindEventListeners(): void {
 		super.bindEventListeners();
 
-		this.client.on("command", async cmd => {
-			if (config.ownerOnly && !cmd.ownerOnly) return;
+		this.client.on("line", async text => {
+			const args = text.split(" ");
 
-			console.log(
-				`${cmd.user.displayName}: ${cmd.ownerOnly ? "^" : "\\"}${
-					cmd.command
-				} ${cmd.args.join(" ")}`
-			);
-
-			const message: CommandMessage = {
+			const message: BaseCommandMessage = {
 				m: "command",
-				a: `${cmd.command} ${cmd.args.join(" ")}`,
-				argc: cmd.args.length + 1,
-				argv: [cmd.command, ...cmd.args],
-				originalMessage: cmd
+				a: text,
+				argc: args.length,
+				argv: args,
+				originalMessage: text,
+				p: {
+					platformId: "console",
+					_id: "console",
+					name: "Console",
+					color: "#ffffff"
+				}
 			};
 
-			const out = await CommandHandler.handleCommand(message, this);
-			console.log(out);
-			if (out) this.client.tell(cmd.user.name, out);
+			let out;
+
+			if (text.startsWith("/")) {
+				out = await MicroHandler.handleMicroCommand(message, this);
+			} else {
+				out = await CommandHandler.handleCommand(message, this);
+			}
+
+			if (out) {
+				this.logger.info(out);
+			} else {
+				this.emit("send chat", message.a);
+			}
+			this.client.prompt();
 		});
 	}
 }

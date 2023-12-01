@@ -1,0 +1,161 @@
+import { ConsoleAgent } from ".";
+import { ServiceLoader } from "..";
+import { scopedEval } from "../..";
+import { BaseCommandMessage } from "../../commands/CommandHandler";
+import { CosmicColor } from "../../util/CosmicColor";
+import { ServiceAgent } from "../ServiceAgent";
+import { MPPAgent } from "../mpp";
+
+export interface ChatMessage<T = unknown> {
+	m: "a";
+	a: string;
+	p: {
+		_id: string;
+		platformId: string;
+		name: string;
+		color: string;
+	};
+	originalMessage: T;
+}
+
+function onChildMessage(msg: ChatMessage) {
+	const consoleAgent = ServiceLoader.agents.find(
+		ag => ag.platform == "console"
+	) as ConsoleAgent | undefined;
+
+	if (!consoleAgent) return;
+
+	consoleAgent.logger.info(
+		`[${msg.p.platformId.substring(0, 6)}] ${msg.p.name}: ${msg.a}`
+	);
+}
+
+function onConsoleMessage(text: string) {
+	const consoleAgent = ServiceLoader.agents.find(
+		ag => ag.platform == "console"
+	) as ConsoleAgent | undefined;
+
+	if (!consoleAgent) return;
+	if (!consoleAgent.viewAgent) return;
+
+	consoleAgent.viewAgent.emit("send chat", `[Console] ${text}`);
+}
+
+export class MicroHandler {
+	public static async handleMicroCommand(
+		command: BaseCommandMessage,
+		agent: ServiceAgent<unknown>
+	) {
+		let microcommand = command.argv[0].substring(1);
+
+		switch (microcommand) {
+			case "help":
+			case "commands":
+			case "cmds":
+			default:
+				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview";
+				break;
+			case "js":
+			case "eval":
+				if (!command.argv[1]) return "Error: No arguments provided";
+				try {
+					const out = scopedEval(command.argv.slice(1).join(" "));
+					return `(${typeof out}) ${out}`;
+				} catch (err) {
+					return err;
+				}
+				break;
+			case "exit":
+			case "stop":
+				process.exit();
+				break;
+			case "list":
+				if (agent.platform !== "console")
+					return "This command is only for console agents.";
+
+				for (let i in ServiceLoader.agents) {
+					const agent2 = ServiceLoader.agents[i];
+					if (agent2.platform == "mpp") {
+						agent.emit(
+							"log",
+							`${i} - ${agent2.platform} - ${
+								(agent2 as MPPAgent).desiredChannel
+							}`
+						);
+					} else {
+						agent.emit("log", `${i} - ${agent2.platform}`);
+					}
+				}
+				break;
+			case "view":
+			case "connect":
+				if (agent.platform !== "console")
+					return "This command is only for console agents.";
+
+				try {
+					let index = parseInt(command.argv[1]);
+					if (typeof index !== "number")
+						return "Please provide an index. (check /list)";
+					let walkie = agent as ConsoleAgent;
+					let talky = ServiceLoader.agents[index];
+
+					if (index == ServiceLoader.agents.indexOf(walkie))
+						return "Why would you want to chat with yourself?";
+
+					// Remove old listeners
+					if (walkie.viewAgent) {
+						walkie.viewAgent.off("chat", onChildMessage);
+						walkie.off("send chat", onConsoleMessage);
+					}
+
+					// Add new listeners
+					walkie.viewAgent = talky;
+					walkie.viewAgent.on("chat", onChildMessage);
+					walkie.on("send chat", onConsoleMessage);
+					return `Now veiwing agent ${index}`;
+				} catch (err) {
+					agent.logger.error(err);
+				}
+
+				break;
+			case "unview":
+			case "stopview":
+			case "stopviewing":
+				if (agent.platform !== "console")
+					return "This command is only for console agents.";
+
+				try {
+					let walkie = agent as ConsoleAgent;
+
+					// Remove old listeners
+					if (walkie.viewAgent) {
+						walkie.viewAgent.off("chat", onChildMessage);
+						walkie.off("send chat", onConsoleMessage);
+					}
+
+					delete walkie.viewAgent;
+				} catch (err) {
+					agent.logger.error(err);
+				}
+
+				break;
+			case "ppl":
+				if (agent.platform !== "console")
+					return "This command is only for console agents.";
+
+				let conAg = agent as ConsoleAgent;
+				if (!conAg.viewAgent) return "There is no agent being viewed.";
+				if (conAg.viewAgent.platform !== "mpp")
+					return "The view agent is not on MPP.";
+
+				const ppl = (conAg.viewAgent as MPPAgent).client.ppl;
+				return `MPP Users: ${Object.values(ppl).map(
+					p =>
+						`\n - ${p._id} (user) / ${p.id} (part): ${p.name} (${
+							p.color
+						}, ${new CosmicColor(p.color).getName()})`
+				)}`;
+				break;
+		}
+	}
+}
