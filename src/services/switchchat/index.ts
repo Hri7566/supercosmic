@@ -23,6 +23,8 @@ export class SwitchChatAgent extends ServiceAgent<Client> {
 
 		this.client.defaultName = this.desiredUser.name;
 		this.client.defaultFormattingMode = "markdown";
+
+		console.log("SwitchChat owner only mode:", config.ownerOnly);
 	}
 
 	public start() {
