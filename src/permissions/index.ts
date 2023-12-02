@@ -1,5 +1,9 @@
 import { Role } from "@prisma/client";
 import { loadConfig } from "../util/config";
+import { Logger } from "../util/Logger";
+import { defaultConfig } from "./default";
+
+const logger = new Logger("Permission Handler");
 
 /**
  * Check two permission strings to see if they match
@@ -12,16 +16,23 @@ import { loadConfig } from "../util/config";
  * @param node2 Permission string
  */
 export function handlePermission(node1: string, node2: string) {
+	// Split strings into arrays of nodes
+	// "thing.thing2" -> ["thing", "thing2"]
 	const hierarchy1 = node1.split(".");
 	const hierarchy2 = node2.split(".");
 
+	// Check nodes in order
 	for (let i = 0; i < hierarchy1.length; i++) {
-		if (i == hierarchy1.length - 1 || i == hierarchy2.length - 1) {
-			if (hierarchy1[i] == hierarchy2[i]) return true;
-		} else {
-			if (hierarchy1[i] == hierarchy2[i]) continue;
+		if (hierarchy1[i] == hierarchy2[i]) {
+			// Last node?
+			if (i == hierarchy1.length - 1 || i == hierarchy2.length - 1) {
+				return true;
+			} else {
+				continue;
+			}
 		}
 
+		// Wildcard?
 		if (hierarchy1[i] == "*") return true;
 		if (hierarchy2[i] == "*") return true;
 
@@ -31,72 +42,49 @@ export function handlePermission(node1: string, node2: string) {
 	return false;
 }
 
-console.log(handlePermission("*", "*"));
-
 /**
  * Check if a group has a permission
  * @param role Prisma role
  * @param permission Permission to check
  */
 export function hasPermission(role: Role, permission: string) {
-	// TODO hasPermission
-	return;
+	const roleVal = roles.get(role);
+	if (!roleVal) return false;
+
+	if (roleVal.inherits) {
+		// logger.debug(
+		// 	"Detected role inheritence from " + role + " to " + roleVal.inherits
+		// );
+		if (hasPermission(roleVal.inherits, permission)) return true;
+	}
+
+	for (const perm of roleVal.permissions) {
+		// logger.debug("Checking " + permission + " and " + perm);
+		if (handlePermission(permission, perm)) return true;
+	}
+
+	return false;
 }
 
 export const roles = new Map<Role, TRole>();
 
 export type TRole = {
 	displayName: string;
+	inherits?: Role;
 	permissions: string[];
-} & (
-	| {
-			permissions: string[];
-	  }
-	| {
-			inherits: Role;
-			permissions?: string[];
-	  }
-);
-
-let defaultConfig = {
-	NONE: {
-		displayName: "None",
-		permissions: [
-			"cosmic.commandGroup.general",
-
-			"cosmic.command.inventory",
-
-			"cosmic.command.magic8ball",
-
-			"cosmic.command.color",
-			"cosmic.command.id",
-			"cosmic.command.math",
-			"cosmic.command.memory"
-		]
-	},
-	MODERATOR: {
-		displayName: "Moderator",
-		inherits: "NONE",
-		permissions: [
-			"cosmic.commandGroup.economy",
-			"cosmic.command.msg",
-			"cosmic.command.memory"
-		]
-	},
-	ADMINISTRATOR: {
-		displayName: "Administrator",
-		inherits: "MODERATOR",
-		permissions: ["cosmic.commandGroup."]
-	},
-	OWNER: {
-		displayName: "Owner",
-		permissions: ["*"]
-	}
-} as Record<Role, TRole>;
+};
 
 let config: Record<Role, TRole>;
 
 export function loadRoleConfig() {
 	config = loadConfig("config/roles.yml", defaultConfig);
-	console.log(config);
+
+	roles.set("NONE", config.NONE);
+	roles.set("MODERATOR", config.MODERATOR);
+	roles.set("ADMINISTRATOR", config.ADMINISTRATOR);
+	roles.set("OWNER", config.OWNER);
+}
+
+export function getRole(role: Role) {
+	return roles.get(role);
 }

@@ -10,6 +10,7 @@ import { magic8ball } from "./commands/fun/magic8ball";
 import { cursor } from "./commands/utility/cursor";
 import { inventory } from "./commands/economy/inventory";
 import { color } from "./commands/utility/color";
+import { role } from "./commands/utility/role";
 
 export function loadCommands() {
 	// cringe
@@ -26,6 +27,6 @@ export function loadCommands() {
 	CommandHandler.addCommandGroup(fun);
 
 	const utility = new CommandGroup("utility", "🔨 Utility");
-	utility.addCommands([math, memory, id, msg, cursor, color]);
+	utility.addCommands([math, memory, id, msg, cursor, color, role]);
 	CommandHandler.addCommandGroup(utility);
 }

@@ -5,6 +5,8 @@ import { Command } from "./Command";
 import { CommandGroup } from "./CommandGroup";
 import { Prefix } from "./Prefix";
 import { createInventory, readInventory } from "../data/inventory";
+import { hasPermission } from "../permissions";
+import { Logger } from "../util/Logger";
 
 export interface CommandMessage<T = unknown> {
 	m: "command";
@@ -40,6 +42,8 @@ export class CommandHandler {
 		}
 	);
 
+	public static logger = new Logger("Command Handler");
+
 	public static addCommandGroup(group: CommandGroup) {
 		this.commandGroups.push(group);
 	}
@@ -54,15 +58,13 @@ export class CommandHandler {
 		if (!user) {
 			let role = Role.NONE;
 
-			if (agent.platform == "console" && msg.p._id == "console") {
-				await createUser({
-					id: msg.p._id,
-					platform: agent.platform,
-					platformId: msg.p.platformId,
-					name: msg.p.name,
-					role: Role.NONE
-				});
-			}
+			await createUser({
+				id: msg.p._id,
+				platform: agent.platform,
+				platformId: msg.p.platformId,
+				name: msg.p.name,
+				role: role
+			});
 
 			user = await readUser(msg.p._id);
 			if (!user)
@@ -107,17 +109,37 @@ export class CommandHandler {
 		if (!usedAlias) return;
 
 		let usedCommand: Command | undefined;
+		let usedCommandGroup: CommandGroup | undefined;
 
 		for (const group of this.commandGroups) {
 			for (const command of group.commands) {
 				if (command.aliases.includes(usedAlias)) {
 					usedCommand = command;
+					usedCommandGroup = group;
 					break;
 				}
 			}
 		}
 
 		if (!usedCommand) return;
+
+		let permissionNode = `cosmic.command.${usedCommand.id}`;
+		// this.logger.debug("Role:", user.role);
+		// this.logger.debug("Node:", permissionNode);
+		let groupNode;
+
+		if (usedCommandGroup)
+			groupNode = `cosmic.commandGroup.${usedCommandGroup.id}`;
+
+		if (groupNode) {
+			if (!hasPermission(user.role, groupNode)) {
+				if (!hasPermission(user.role, permissionNode))
+					return "No permission";
+			}
+		} else {
+			if (!hasPermission(user.role, permissionNode))
+				return "No permission";
+		}
 
 		(msg as CommandMessage).user = user;
 		(msg as CommandMessage).inventory = inventory;
@@ -126,7 +148,7 @@ export class CommandHandler {
 			const out = usedCommand.callback(msg as CommandMessage, agent);
 			if (out) return out;
 		} catch (err) {
-			console.error(err);
+			this.logger.error(err);
 			return "An error has occurred.";
 		}
 	}

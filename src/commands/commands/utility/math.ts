@@ -10,11 +10,9 @@ export const math = new Command(
 	(msg, agent) => {
 		try {
 			const argcat = msg.argv.slice(1, msg.argv.length).join(" ");
-			console.log(argcat);
 			const answer = evaluate(argcat);
 			return `Answer: ${answer}`;
 		} catch (err) {
-			console.error(err);
 			return `Invalid expression: ${err}`;
 		}
 	}
