@@ -5,7 +5,7 @@ export const cursor = new Command(
 	"cursor",
 	["cursor"],
 	"set the cursor bozo",
-	"cursor",
+	"cursor <mode>",
 	(msg, agent) => {
 		if (!(agent as MPPAgent).client.isConnected) return;
 		if (!msg.argv[1]) return "Specify a mode.";
