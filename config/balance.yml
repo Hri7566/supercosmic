@@ -1,3 +1,4 @@
 symbol: " star bits"
 after: true
 cutoff: 0
+defaultBalance: 0
