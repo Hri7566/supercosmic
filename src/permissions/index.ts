@@ -3,6 +3,11 @@ import { loadConfig } from "../util/config";
 
 /**
  * Check two permission strings to see if they match
+ *
+ * Usage:
+ * ```ts
+ * handlePermission("cosmic.command.help", "cosmic.command.*"); // true
+ * ```
  * @param node1 Permission string
  * @param node2 Permission string
  */
@@ -11,15 +16,14 @@ export function handlePermission(node1: string, node2: string) {
 	const hierarchy2 = node2.split(".");
 
 	for (let i = 0; i < hierarchy1.length; i++) {
-		if (i == hierarchy1.length - 1 || i == hierarchy2.length) {
+		if (i == hierarchy1.length - 1 || i == hierarchy2.length - 1) {
 			if (hierarchy1[i] == hierarchy2[i]) return true;
-			if (hierarchy1[i] == "*") return true;
-			if (hierarchy2[i] == "*") return true;
 		} else {
 			if (hierarchy1[i] == hierarchy2[i]) continue;
-			if (hierarchy1[i] == "*") return true;
-			if (hierarchy2[i] == "*") return true;
 		}
+
+		if (hierarchy1[i] == "*") return true;
+		if (hierarchy2[i] == "*") return true;
 
 		return false;
 	}
