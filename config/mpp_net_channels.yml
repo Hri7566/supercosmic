@@ -5,6 +5,6 @@ agents:
     wss://mppclone.com:
         - id: "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧"
         # - id: "Anime/Touhou & Modern"
-        - id: "test/awkward"
+        # - id: "test/awkward"
         # - id: "wizardposting"
         # - id: Room163249719601

@@ -1,6 +1,8 @@
 import { loadCommands } from "./commands";
+import { loadRoleConfig } from "./permissions";
 import { ServiceLoader } from "./services";
 
+loadRoleConfig();
 loadCommands();
 ServiceLoader.loadServices();
 

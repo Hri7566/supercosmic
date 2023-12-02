@@ -7,10 +7,13 @@ export const id = new Command(
 	"get your id bozo",
 	"id",
 	(msg, agent) => {
-		if (!(agent as MPPAgent).client.isConnected) return;
-		return `ID: \`${(msg.originalMessage as any).p._id}\` Cosmic ID: \`${
-			msg.p._id
-		}\``;
+		if (agent.platform == "mpp") {
+			return `ID: \`${
+				(msg.originalMessage as any).p._id
+			}\` Cosmic ID: \`${msg.p._id}\``;
+		} else {
+			return `Cosmic ID: \`${msg.p._id}\``;
+		}
 	},
 	false
 );

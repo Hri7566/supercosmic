@@ -78,6 +78,7 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 			} else {
 				this.emit("send chat", message.a);
 			}
+
 			this.client.prompt();
 		});
 	}

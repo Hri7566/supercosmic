@@ -1,4 +1,4 @@
-import { Inventory, User } from "@prisma/client";
+import { Inventory, Role, User } from "@prisma/client";
 import { createUser, readUser } from "../data/user";
 import { ServiceAgent } from "../services/ServiceAgent";
 import { Command } from "./Command";
@@ -52,12 +52,17 @@ export class CommandHandler {
 		let user = await readUser(msg.p._id);
 
 		if (!user) {
-			await createUser({
-				id: msg.p._id,
-				platform: agent.platform,
-				platformId: msg.p.platformId,
-				name: msg.p.name
-			});
+			let role = Role.NONE;
+
+			if (agent.platform == "console" && msg.p._id == "console") {
+				await createUser({
+					id: msg.p._id,
+					platform: agent.platform,
+					platformId: msg.p.platformId,
+					name: msg.p.name,
+					role: Role.NONE
+				});
+			}
 
 			user = await readUser(msg.p._id);
 			if (!user)

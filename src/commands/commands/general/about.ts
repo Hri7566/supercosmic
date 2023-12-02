@@ -6,6 +6,6 @@ export const about = new Command(
 	"get about bozo",
 	"about",
 	(msg, agent) => {
-		return `This is a dumb chat bot`;
+		return `💫 This space bot was made by Hri7566.\n🚀 This bot is made possible by users like you. Thank you.\n🌌 Discord: @hri7566`;
 	}
 );

@@ -1,7 +1,9 @@
+import { Role } from "@prisma/client";
 import { ConsoleAgent } from ".";
 import { ServiceLoader } from "..";
 import { scopedEval } from "../..";
 import { BaseCommandMessage } from "../../commands/CommandHandler";
+import { readUser, updateUser } from "../../data/user";
 import { CosmicColor } from "../../util/CosmicColor";
 import { ServiceAgent } from "../ServiceAgent";
 import { MPPAgent } from "../mpp";
@@ -53,7 +55,7 @@ export class MicroHandler {
 			case "commands":
 			case "cmds":
 			default:
-				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview";
+				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview | /admin+ <id>";
 				break;
 			case "js":
 			case "eval":
@@ -155,6 +157,40 @@ export class MicroHandler {
 							p.color
 						}, ${new CosmicColor(p.color).getName()})`
 				)}`;
+				break;
+			case "admin+":
+				const userId = command.argv
+					.slice(1, command.argv.length)
+					.join(" ");
+
+				let user = await readUser(userId);
+				if (!user) return "No such user.";
+
+				user.role = Role.ADMINISTRATOR;
+				await updateUser(user);
+
+				return `Made user "${user.name}" [${user.platformId.substring(
+					0,
+					6
+				)}...] an administrator`;
+
+				break;
+			case "admin-":
+				const userId2 = command.argv
+					.slice(1, command.argv.length)
+					.join(" ");
+
+				let user2 = await readUser(userId2);
+				if (!user2) return "No such user.";
+
+				user2.role = Role.NONE;
+				await updateUser(user2);
+
+				return `Made user "${user2.name}" [${user2.platformId.substring(
+					0,
+					6
+				)}...] a normal user.`;
+
 				break;
 		}
 	}
