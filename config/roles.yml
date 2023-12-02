@@ -3,6 +3,7 @@ NONE:
     permissions:
         - cosmic.commandGroup.general
         - cosmic.command.inventory
+        - cosmic.command.balance
         - cosmic.command.magic8ball
         - cosmic.command.color
         - cosmic.command.id

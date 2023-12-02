@@ -21,10 +21,11 @@ model User {
 }
 
 model Inventory {
-  id     Int    @id @unique @default(autoincrement())
-  userId String @unique
-  user   User   @relation(fields: [userId], references: [id])
-  items  Json
+  id      Int    @id @unique @default(autoincrement())
+  userId  String @unique
+  user    User   @relation(fields: [userId], references: [id])
+  items   Json
+  balance Float  @default(0)
 }
 
 enum Role {

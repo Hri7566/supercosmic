@@ -8,6 +8,7 @@ export const defaultConfig = {
 			"cosmic.commandGroup.general",
 
 			"cosmic.command.inventory",
+			"cosmic.command.balance",
 
 			"cosmic.command.magic8ball",
 

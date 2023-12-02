@@ -13,6 +13,7 @@ import { color } from "./commands/utility/color";
 import { role } from "./commands/utility/role";
 import { ic } from "./commands/utility/ic";
 import { uptime } from "./commands/utility/uptime";
+import { balance } from "./commands/economy/balance";
 
 export function loadCommands() {
 	// cringe
@@ -21,7 +22,7 @@ export function loadCommands() {
 	CommandHandler.addCommandGroup(general);
 
 	const economy = new CommandGroup("economy", "💸 Economy");
-	economy.addCommands([inventory]);
+	economy.addCommands([inventory, balance]);
 	CommandHandler.addCommandGroup(economy);
 
 	const fun = new CommandGroup("fun", "✨ Fun");
