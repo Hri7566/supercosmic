@@ -9,9 +9,9 @@ export const memory = new Command(
 	(msg, agent) => {
 		return `${(process.memoryUsage().heapUsed / 1000 / 1000).toFixed(
 			2
-		)} MB / ${(process.memoryUsage().heapTotal / 1000 / 1000).toFixed(
+		)} MB used / ${(process.memoryUsage().heapTotal / 1000 / 1000).toFixed(
 			2
-		)} MB`;
+		)} MB total`;
 	},
 	false
 );
