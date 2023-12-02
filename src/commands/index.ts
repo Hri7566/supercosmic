@@ -12,6 +12,7 @@ import { inventory } from "./commands/economy/inventory";
 import { color } from "./commands/utility/color";
 import { role } from "./commands/utility/role";
 import { ic } from "./commands/utility/ic";
+import { uptime } from "./commands/utility/uptime";
 
 export function loadCommands() {
 	// cringe
@@ -28,6 +29,16 @@ export function loadCommands() {
 	CommandHandler.addCommandGroup(fun);
 
 	const utility = new CommandGroup("utility", "🔨 Utility");
-	utility.addCommands([math, memory, id, msg, cursor, color, role, ic]);
+	utility.addCommands([
+		math,
+		memory,
+		id,
+		msg,
+		cursor,
+		color,
+		role,
+		ic,
+		uptime
+	]);
 	CommandHandler.addCommandGroup(utility);
 }

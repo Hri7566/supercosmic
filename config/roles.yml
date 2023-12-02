@@ -15,6 +15,7 @@ MODERATOR:
         - cosmic.commandGroup.economy
         - cosmic.command.msg
         - cosmic.command.memory
+        - cosmic.command.uptime
 ADMINISTRATOR:
     displayName: Administrator
     inherits: MODERATOR

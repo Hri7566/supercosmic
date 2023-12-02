@@ -23,7 +23,8 @@ export const defaultConfig = {
 		permissions: [
 			"cosmic.commandGroup.economy",
 			"cosmic.command.msg",
-			"cosmic.command.memory"
+			"cosmic.command.memory",
+			"cosmic.command.uptime"
 		]
 	},
 	ADMINISTRATOR: {
