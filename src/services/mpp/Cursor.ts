@@ -25,7 +25,7 @@ export class Cursor {
 	public updateInterval: NodeJS.Timeout;
 
 	public props: CursorProps = {
-		currentAnimation: "test2",
+		currentAnimation: "lemniscate",
 		position: {
 			x: 50,
 			y: 50
