@@ -1,7 +1,6 @@
 import {
 	BaseCommandMessage,
-	CommandHandler,
-	CommandMessage
+	CommandHandler
 } from "../../commands/CommandHandler";
 import { loadConfig } from "../../util/config";
 import { ServiceAgent } from "../ServiceAgent";

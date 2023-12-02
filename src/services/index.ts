@@ -1,9 +1,7 @@
-import EventEmitter from "events";
 import { MPPAgent } from "./mpp";
 import env from "../util/env";
 import { ServiceAgent } from "./ServiceAgent";
 import { loadConfig } from "../util/config";
-import { z } from "zod";
 import { SwitchChatAgent } from "./switchchat";
 import { ConsoleAgent } from "./console";
 

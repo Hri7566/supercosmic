@@ -7,7 +7,7 @@ export const help = new Command(
 	["help", "h", "commands", "cmds"],
 	"get help bozo",
 	"help [command]",
-	(msg, agent) => {
+	msg => {
 		if (msg.argv[1]) {
 			// Get command usage
 			let command: Command | undefined;

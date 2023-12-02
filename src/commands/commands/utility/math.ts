@@ -6,7 +6,7 @@ export const math = new Command(
 	["math"],
 	"math bozo",
 	"math <expression>",
-	(msg, agent) => {
+	msg => {
 		try {
 			const argcat = msg.argv.slice(1, msg.argv.length).join(" ");
 			const answer = evaluate(argcat);

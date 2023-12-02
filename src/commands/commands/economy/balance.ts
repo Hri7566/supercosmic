@@ -1,5 +1,4 @@
 import { formatBalance } from "../../../economy/Balance";
-import { Item, StackableItem } from "../../../economy/Item";
 import { Command } from "../../Command";
 
 export const balance = new Command(
@@ -7,7 +6,7 @@ export const balance = new Command(
 	["balance", "bal", "money"],
 	"get bozo's balance",
 	"balance",
-	(msg, agent) => {
+	msg => {
 		const bal = msg.inventory.balance;
 		return `Balance: ${formatBalance(bal)}`;
 	}

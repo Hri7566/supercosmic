@@ -1,4 +1,3 @@
-import { MPPAgent } from "../../../services/mpp";
 import { CosmicColor } from "../../../util/CosmicColor";
 import { Command } from "../../Command";
 
@@ -7,7 +6,7 @@ export const color = new Command(
 	["color"],
 	"colors, bozo",
 	"color [<r> <g> <b> | <hex>]",
-	(msg, agent) => {
+	msg => {
 		if (msg.argv[3]) {
 			// test for rgb
 			try {

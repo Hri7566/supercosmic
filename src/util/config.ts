@@ -1,6 +1,5 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { parse, stringify } from "yaml";
-import { z } from "zod";
 
 /**
  * Load a YAML config file and set default values if config path is nonexistent

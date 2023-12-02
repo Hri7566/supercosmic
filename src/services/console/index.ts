@@ -2,15 +2,10 @@ import {
 	BaseCommandMessage,
 	CommandHandler
 } from "../../commands/CommandHandler";
-import { loadConfig } from "../../util/config";
 import { ServiceAgent } from "../ServiceAgent";
 import readline from "readline";
 import { MicroHandler } from "./MicroHandler";
 import { Logger } from "../../util/Logger";
-
-const config = loadConfig("config/switchchat.yml", {
-	ownerOnly: false
-});
 
 export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 	public desiredUser = {

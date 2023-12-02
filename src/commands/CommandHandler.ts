@@ -7,6 +7,7 @@ import { Prefix } from "./Prefix";
 import { createInventory, readInventory } from "../data/inventory";
 import { hasPermission } from "../permissions";
 import { Logger } from "../util/Logger";
+import { balanceConfig } from "../economy/Balance";
 
 export interface CommandMessage<T = unknown> {
 	m: "command";
@@ -77,7 +78,8 @@ export class CommandHandler {
 		if (!inventory) {
 			await createInventory({
 				userId: msg.p._id,
-				items: []
+				items: [],
+				balance: balanceConfig.defaultBalance || 0
 			});
 
 			inventory = await readInventory(msg.p._id);

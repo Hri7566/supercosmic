@@ -1,4 +1,4 @@
-import { Inventory, Prisma, User } from "@prisma/client";
+import { Inventory } from "@prisma/client";
 import { prisma } from "./prisma";
 
 export async function createInventory(data: Omit<Inventory, "id">) {
