@@ -1,4 +1,3 @@
-import { MPPAgent } from "../../../services/mpp";
 import { Command } from "../../Command";
 
 export const memory = new Command(
@@ -12,6 +11,5 @@ export const memory = new Command(
 		)} MB used / ${(process.memoryUsage().heapTotal / 1000 / 1000).toFixed(
 			2
 		)} MB total`;
-	},
-	false
+	}
 );

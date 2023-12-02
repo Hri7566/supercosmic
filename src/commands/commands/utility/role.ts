@@ -1,5 +1,4 @@
 import { getRole } from "../../../permissions";
-import { MPPAgent } from "../../../services/mpp";
 import { Command } from "../../Command";
 
 export const role = new Command(
@@ -11,6 +10,5 @@ export const role = new Command(
 		const role = getRole(msg.user.role);
 		if (!role) return `Your role: ${msg.user.role} (this role is broken)`;
 		return `Your role: ${role.displayName} [${msg.user.role}]`;
-	},
-	false
+	}
 );

@@ -14,7 +14,6 @@ export const defaultConfig = {
 			"cosmic.command.color",
 			"cosmic.command.id",
 			"cosmic.command.math",
-			"cosmic.command.memory",
 			"cosmic.command.role"
 		]
 	},
@@ -30,7 +29,7 @@ export const defaultConfig = {
 	ADMINISTRATOR: {
 		displayName: "Administrator",
 		inherits: "MODERATOR",
-		permissions: ["cosmic.commandGroup.*"]
+		permissions: ["cosmic.commandGroup.*", "cosmic.command.ic"]
 	},
 	OWNER: {
 		displayName: "Owner",

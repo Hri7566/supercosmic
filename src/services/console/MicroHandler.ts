@@ -55,7 +55,7 @@ export class MicroHandler {
 			case "commands":
 			case "cmds":
 			default:
-				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview | /admin+ <id>";
+				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview | /admin+ <id> | /admin- <id> | /owner+ <id>";
 				break;
 			case "js":
 			case "eval":
@@ -173,7 +173,6 @@ export class MicroHandler {
 					0,
 					6
 				)}...] an administrator`;
-
 				break;
 			case "admin-":
 				const userId2 = command.argv
@@ -190,7 +189,22 @@ export class MicroHandler {
 					0,
 					6
 				)}...] a normal user.`;
+				break;
+			case "owner+":
+				const userId3 = command.argv
+					.slice(1, command.argv.length)
+					.join(" ");
 
+				let user3 = await readUser(userId3);
+				if (!user3) return "No such user.";
+
+				user3.role = Role.OWNER;
+				await updateUser(user3);
+
+				return `Made user "${user3.name}" [${user3.platformId.substring(
+					0,
+					6
+				)}...] an owner`;
 				break;
 		}
 	}

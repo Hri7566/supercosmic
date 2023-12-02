@@ -1,4 +1,3 @@
-import { MPPAgent } from "../../../services/mpp";
 import { Command } from "../../Command";
 
 export const msg = new Command(
@@ -7,8 +6,7 @@ export const msg = new Command(
 	"get your msg bozo",
 	"msg",
 	(msg, agent) => {
-		if (!(agent as MPPAgent).client.isConnected) return;
+		if (agent.platform !== "mpp") return;
 		return `${JSON.stringify(msg)}`;
-	},
-	false
+	}
 );

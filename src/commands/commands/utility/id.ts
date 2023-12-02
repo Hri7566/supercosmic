@@ -1,4 +1,3 @@
-import { MPPAgent } from "../../../services/mpp";
 import { Command } from "../../Command";
 
 export const id = new Command(
@@ -14,6 +13,5 @@ export const id = new Command(
 		} else {
 			return `Cosmic ID: \`${msg.p._id}\``;
 		}
-	},
-	false
+	}
 );

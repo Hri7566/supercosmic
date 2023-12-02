@@ -7,7 +7,6 @@ NONE:
         - cosmic.command.color
         - cosmic.command.id
         - cosmic.command.math
-        - cosmic.command.memory
         - cosmic.command.role
 MODERATOR:
     displayName: Moderator
@@ -21,6 +20,7 @@ ADMINISTRATOR:
     inherits: MODERATOR
     permissions:
         - cosmic.commandGroup.*
+        - cosmic.command.ic
 OWNER:
     displayName: Owner
     permissions:

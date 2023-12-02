@@ -1,5 +1,4 @@
 import { Command } from "../../Command";
-
 import { evaluate } from "mathjs";
 
 export const math = new Command(

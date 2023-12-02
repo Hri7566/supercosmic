@@ -1,3 +1,4 @@
+import { hasPermission } from "../../../permissions";
 import { Command } from "../../Command";
 import { CommandHandler } from "../../CommandHandler";
 
@@ -31,6 +32,13 @@ export const help = new Command(
 					commandGroup.commands
 						.map(command => {
 							if (!command.visible) return;
+							if (
+								!hasPermission(
+									msg.user.role,
+									`cosmic.command.${command.id}`
+								)
+							)
+								return;
 							return command.aliases[0];
 						})
 						.filter(val => {

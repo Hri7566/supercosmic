@@ -12,6 +12,5 @@ export const cursor = new Command(
 
 		const cursor = (agent as MPPAgent).cursor;
 		cursor.props.currentAnimation = msg.argv[1];
-	},
-	false
+	}
 );
