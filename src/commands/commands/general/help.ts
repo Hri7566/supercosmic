@@ -36,6 +36,10 @@ export const help = new Command(
 								!hasPermission(
 									msg.user.role,
 									`cosmic.command.${command.id}`
+								) &&
+								!hasPermission(
+									msg.user.role,
+									`cosmic.commandGroup.${commandGroup.id}`
 								)
 							)
 								return;
