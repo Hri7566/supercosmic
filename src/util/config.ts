@@ -1,5 +1,6 @@
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
 import { parse, stringify } from "yaml";
+import { parse as parsePath } from "path/posix";
 
 /**
  * Load a YAML config file and set default values if config path is nonexistent
@@ -63,6 +64,9 @@ export function loadConfig<T>(configPath: string, defaultConfig: T): T {
  * @param config
  */
 export function writeConfig<T>(configPath: string, config: T) {
+	const path = parsePath(configPath);
+	if (!existsSync(path.dir)) mkdirSync(path.dir);
+
 	writeFileSync(
 		configPath,
 		stringify(config, {
