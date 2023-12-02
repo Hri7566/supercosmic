@@ -52,6 +52,24 @@ Pretty much all of the available settings for things are in the `config` directo
 -   `switchchat.yml`: SwitchCraft Chatbox config
     -   SwitchCraft 3 is a Minecraft server that primarily uses the ComputerCraft: Tweaked mod. They have a custom chat system that allows for user-created commands.
 
+## Project Hierarchy
+
+-   `src`: Source code folder
+    -   `commands`: Command logic
+        -   `commands`: Command group folder
+            -   `economy`: Economy commands
+            -   `fun`: Fun commands
+            -   `general`: General commands
+            -   `utility`: Utility commands
+    -   `data`: Data handlers
+    -   `economy`: Economy helpers & intervals
+    -   `permissions`: Roles & permissions
+    -   `services`: Connections to outside sites (service agents)
+        -   `console`: Console agent & microcommand handler
+        -   `mpp`: MPP/MPP.net client
+        -   `switchchat`: SwitchCraft 3 Chatbox client
+    -   `util`: Utilities & miscellaneous helpers
+
 ## Info
 
 This project was created using `bun init` in bun v1.0.4. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
