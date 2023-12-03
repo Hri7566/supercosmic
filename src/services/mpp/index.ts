@@ -73,16 +73,21 @@ export class MPPAgent extends ServiceAgent<Client> {
 			);
 
 			if (str) {
-				if (str.includes("\n")) {
-					let sp = str.split("\n");
+				this.logger.debug(str);
+				if (typeof str == "string") {
+					if (str.includes("\n")) {
+						let sp = str.split("\n");
 
-					for (const s of sp) {
-						this.client.sendArray([
-							{
-								m: "a",
-								message: `\u034f${s}`
-							}
-						]);
+						for (const s of sp) {
+							this.client.sendArray([
+								{
+									m: "a",
+									message: `\u034f${s}`
+								}
+							]);
+						}
+					} else {
+						this.emit("send chat", str);
 					}
 				} else {
 					this.emit("send chat", str);
