@@ -73,7 +73,6 @@ export class MPPAgent extends ServiceAgent<Client> {
 			);
 
 			if (str) {
-				this.logger.debug(str);
 				if (typeof str == "string") {
 					if (str.includes("\n")) {
 						let sp = str.split("\n");

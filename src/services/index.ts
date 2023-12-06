@@ -4,6 +4,7 @@ import { ServiceAgent } from "./ServiceAgent";
 import { loadConfig } from "../util/config";
 import { SwitchChatAgent } from "./switchchat";
 import { ConsoleAgent } from "./console";
+import { DiscordAgent } from "./discord";
 
 /**
  * Services are anything (any platforms or environments) that the bot will directly communicate to users with
@@ -77,6 +78,13 @@ export class ServiceLoader {
 
 			switchChatAgent.start();
 			this.addAgent(switchChatAgent);
+		}
+
+		if (config.enableDiscord) {
+			const discordAgent = new DiscordAgent(env.DISCORD_TOKEN);
+
+			discordAgent.start();
+			this.addAgent(discordAgent);
 		}
 
 		if (config.enableConsole) {
