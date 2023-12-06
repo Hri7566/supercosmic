@@ -1,5 +1,5 @@
 module.exports = {
 	name: "supercosmic",
-	script: "index.ts",
+	script: "src/index.ts",
 	interpreter: "~/.bun/bin/bun"
 };
