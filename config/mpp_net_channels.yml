@@ -4,3 +4,4 @@ desiredUser:
 agents:
     wss://mppclone.com:
         - id: "✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧"
+        - id: "test/awkward"
