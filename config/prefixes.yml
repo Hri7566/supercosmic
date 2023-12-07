@@ -1,0 +1,5 @@
+prefixes:
+    - id: cosmic
+      spaced: true
+    - id: "*"
+      spaced: false

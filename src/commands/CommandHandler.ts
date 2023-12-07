@@ -8,6 +8,20 @@ import { createInventory, readInventory } from "../data/inventory";
 import { hasPermission } from "../permissions";
 import { Logger } from "../util/Logger";
 import { balanceConfig } from "../economy/Balance";
+import { loadConfig } from "../util/config";
+
+const prefixConfig = loadConfig("config/prefixes.yml", {
+	prefixes: [
+		{
+			id: "cosmic",
+			spaced: true
+		},
+		{
+			id: "*",
+			spaced: false
+		}
+	]
+});
 
 export interface CommandMessage<T = unknown> {
 	m: "command";
@@ -32,16 +46,7 @@ export type BaseCommandMessage<T = unknown> = Omit<
 
 export class CommandHandler {
 	public static commandGroups = new Array<CommandGroup>();
-	public static prefixes = new Array<Prefix>(
-		{
-			id: "cosmic",
-			spaced: true
-		},
-		{
-			id: "*",
-			spaced: false
-		}
-	);
+	public static prefixes = new Array<Prefix>();
 
 	public static logger = new Logger("Command Handler");
 
@@ -154,4 +159,9 @@ export class CommandHandler {
 			return "An error has occurred.";
 		}
 	}
+}
+
+// Add prefixes
+for (const prefix of prefixConfig.prefixes) {
+	CommandHandler.prefixes.push(prefix);
 }

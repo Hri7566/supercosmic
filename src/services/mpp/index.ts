@@ -11,7 +11,8 @@ export class MPPAgent extends ServiceAgent<Client> {
 		uri: string,
 		public desiredChannel: string,
 		public desiredUser: { name: string; color: string },
-		token: string
+		token: string,
+		public debug: boolean = false
 	) {
 		const cl = new Client(uri, token);
 		super("mpp", cl);

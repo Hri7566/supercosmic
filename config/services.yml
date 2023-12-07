@@ -1,3 +1,4 @@
+debug: false
 enableConsole: true
 enableMPP: true
 enableDiscord: true

@@ -11,6 +11,7 @@ import { DiscordAgent } from "./discord";
  */
 
 const config = loadConfig("config/services.yml", {
+	debug: false,
 	enableConsole: true,
 	enableMPP: false,
 	enableDiscord: false,
@@ -62,7 +63,8 @@ export class ServiceLoader {
 									color: mppConfig.desiredUser.color
 							  }
 							: mppConfig.desiredUser,
-						env.MPPNET_TOKEN
+						env.MPPNET_TOKEN,
+						config.debug
 					);
 
 					mppAgent.start();
