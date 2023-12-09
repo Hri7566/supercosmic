@@ -1,5 +1,5 @@
 prefixes:
-    - id: cosmic
-      spaced: true
-    - id: "*"
+    - id: "**"
       spaced: false
+    - id: cdebug
+      spaced: true

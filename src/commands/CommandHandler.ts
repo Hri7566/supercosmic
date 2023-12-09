@@ -1,5 +1,5 @@
 import { Inventory, Role, User } from "@prisma/client";
-import { createUser, readUser } from "../data/user";
+import { createUser, readUser, updateUser } from "../data/user";
 import { ServiceAgent } from "../services/ServiceAgent";
 import { Command } from "./Command";
 import { CommandGroup } from "./CommandGroup";
@@ -13,12 +13,12 @@ import { loadConfig } from "../util/config";
 const prefixConfig = loadConfig("config/prefixes.yml", {
 	prefixes: [
 		{
-			id: "cosmic",
-			spaced: true
-		},
-		{
 			id: "*",
 			spaced: false
+		},
+		{
+			id: "cosmic",
+			spaced: true
 		}
 	]
 });
@@ -77,6 +77,11 @@ export class CommandHandler {
 				return "Somehow, something has gone terribly wrong and I can't create user data for you. I can't run your command now.";
 		}
 
+		if (user.name !== msg.p.name) {
+			user.name = msg.p.name;
+			await updateUser(user);
+		}
+
 		// Get inventory data
 		let inventory = await readInventory(msg.p._id);
 
@@ -93,12 +98,15 @@ export class CommandHandler {
 		}
 
 		let usedPrefix: Prefix | undefined;
+		let isSpacedAndNonMatching = false;
 
 		for (const prefix of this.prefixes) {
 			if (msg.argv[0].startsWith(prefix.id)) {
 				usedPrefix = prefix;
 
 				if (prefix.spaced) {
+					if (prefix.id !== msg.argv[0])
+						isSpacedAndNonMatching = true;
 					msg.argv.splice(0, 1);
 					msg.argc--;
 				}
@@ -108,6 +116,7 @@ export class CommandHandler {
 		}
 
 		if (!usedPrefix) return;
+		if (isSpacedAndNonMatching) return;
 
 		let usedAlias = msg.argv[0];
 		if (!usedPrefix.spaced)

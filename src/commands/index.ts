@@ -14,6 +14,8 @@ import { role } from "./commands/utility/role";
 import { ic } from "./commands/utility/ic";
 import { uptime } from "./commands/utility/uptime";
 import { balance } from "./commands/economy/balance";
+import { permissions } from "./commands/utility/permissions";
+import { branch } from "./commands/utility/branch";
 
 export function loadCommands() {
 	// cringe
@@ -39,7 +41,9 @@ export function loadCommands() {
 		color,
 		role,
 		ic,
-		uptime
+		uptime,
+		permissions,
+		branch
 	]);
 	CommandHandler.addCommandGroup(utility);
 }

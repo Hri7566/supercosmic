@@ -31,7 +31,7 @@ interface MPPNetConfig {
 
 const mppConfig = loadConfig<MPPNetConfig>("config/mpp_net_channels.yml", {
 	desiredUser: {
-		name: "🟇 𝙎𝙪𝙥𝙚𝙧 Cosmic (*help)",
+		name: "🟇 𝙎𝙪𝙥𝙚𝙧 Cosmic",
 		color: "#1d0054"
 	},
 	agents: {

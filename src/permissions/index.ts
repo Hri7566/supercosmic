@@ -88,3 +88,10 @@ export function loadRoleConfig() {
 export function getRole(role: Role) {
 	return roles.get(role);
 }
+
+export function fuzzyFindRoleByDisplayName(fuzzy: string) {
+	for (const [key, val] of roles) {
+		if (val.displayName.toLowerCase().includes(fuzzy.toLowerCase()))
+			return val;
+	}
+}
