@@ -8,6 +8,7 @@ export const inventory = new Command(
 	"inventory",
 	msg => {
 		const items = msg.inventory.items as unknown as Item[];
+		console.log(msg.inventory);
 		const list = items
 			.map(
 				i =>

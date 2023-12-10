@@ -16,6 +16,9 @@ import { uptime } from "./commands/utility/uptime";
 import { balance } from "./commands/economy/balance";
 import { permissions } from "./commands/utility/permissions";
 import { branch } from "./commands/utility/branch";
+import { tree } from "./commands/economy/tree";
+import { pick } from "./commands/economy/pick";
+import { grow } from "./commands/economy/grow";
 
 export function loadCommands() {
 	// cringe
@@ -24,7 +27,7 @@ export function loadCommands() {
 	CommandHandler.addCommandGroup(general);
 
 	const economy = new CommandGroup("economy", "💸 Economy");
-	economy.addCommands([inventory, balance]);
+	economy.addCommands([inventory, balance, tree, pick, grow]);
 	CommandHandler.addCommandGroup(economy);
 
 	const fun = new CommandGroup("fun", "✨ Fun");

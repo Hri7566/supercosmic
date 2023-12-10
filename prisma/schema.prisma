@@ -34,3 +34,8 @@ enum Role {
   ADMINISTRATOR
   OWNER
 }
+
+model KeyValueStore {
+  id   Int  @id @unique @default(1)
+  data Json @default("{}")
+}
