@@ -42,7 +42,7 @@ export async function updateInventory(data: Omit<Inventory, "id">) {
 		where: { userId: data.userId },
 		data: {
 			balance: data.balance,
-			items: data.items as any
+			items: JSON.stringify(data.items)
 		}
 	});
 }
