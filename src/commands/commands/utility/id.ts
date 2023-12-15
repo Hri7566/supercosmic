@@ -6,7 +6,7 @@ export const id = new Command(
 	"get your id bozo",
 	"id",
 	(msg, agent) => {
-		if (agent.platform == "mpp") {
+		if (agent.platform === "mpp") {
 			return `ID: \`${
 				(msg.originalMessage as any).p._id
 			}\` Cosmic ID: \`${msg.p._id}\``;

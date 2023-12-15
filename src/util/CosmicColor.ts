@@ -80,9 +80,9 @@ export class CosmicColor {
 		let g = (~~this.g || 0).toString(16);
 		let b = (~~this.b || 0).toString(16);
 
-		if (r.length == 1) r = "0" + r;
-		if (g.length == 1) g = "0" + g;
-		if (b.length == 1) b = "0" + b;
+		if (r.length === 1) r = "0" + r;
+		if (g.length === 1) g = "0" + g;
+		if (b.length === 1) b = "0" + b;
 
 		return "#" + r + g + b;
 	}

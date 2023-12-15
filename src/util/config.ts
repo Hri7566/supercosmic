@@ -16,6 +16,7 @@ import { parse as parsePath } from "path/posix";
  * @returns Parsed YAML config
  */
 export function loadConfig<T>(configPath: string, defaultConfig: T): T {
+	console.time(`Loading config ${configPath}`);
 	// Config exists?
 	if (existsSync(configPath)) {
 		// Load config
@@ -30,12 +31,12 @@ export function loadConfig<T>(configPath: string, defaultConfig: T): T {
 			obj2: Record<string, unknown>
 		) {
 			for (const key of Object.keys(obj2)) {
-				if (typeof obj[key] == "undefined") {
+				if (typeof obj[key] === "undefined") {
 					obj[key] = obj2[key];
 					changed = true;
 				}
 
-				if (typeof obj[key] == "object" && !Array.isArray(obj[key])) {
+				if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
 					mix(
 						obj[key] as Record<string, unknown>,
 						obj2[key] as Record<string, unknown>
@@ -54,6 +55,7 @@ export function loadConfig<T>(configPath: string, defaultConfig: T): T {
 	} else {
 		// Write default config to disk and use that
 		writeConfig(configPath, defaultConfig);
+
 		return defaultConfig as T;
 	}
 }

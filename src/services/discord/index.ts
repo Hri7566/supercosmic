@@ -74,7 +74,7 @@ export class DiscordAgent extends ServiceAgent<Discord.Client> {
 			);
 
 			if (str) {
-				if (typeof str == "string") {
+				if (typeof str === "string") {
 					const channel = await this.client.channels.fetch(
 						msg.channelId
 					);

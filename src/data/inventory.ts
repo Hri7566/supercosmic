@@ -18,19 +18,19 @@ export async function readInventory(userId: Inventory["userId"]) {
 
 export function collapseInventory(inventoryData: Item[]) {
 	for (let i = 0; i < inventoryData.length; i++) {
-		if (i > 0) {
-			if (inventoryData[i].id == inventoryData[i - 1].id) {
-				if (
-					typeof (inventoryData[i - 1] as StackableItem).count ==
-						"number" &&
-					typeof (inventoryData[i] as StackableItem).count == "number"
-				) {
-					(inventoryData[i - 1] as StackableItem).count += (
-						inventoryData[i] as StackableItem
-					).count;
-					inventoryData.splice(i, 1);
-					i--;
-				}
+		if (i <= 0) continue;
+
+		if (inventoryData[i].id === inventoryData[i - 1].id) {
+			if (
+				typeof (inventoryData[i - 1] as StackableItem).count ===
+					"number" &&
+				typeof (inventoryData[i] as StackableItem).count === "number"
+			) {
+				(inventoryData[i - 1] as StackableItem).count += (
+					inventoryData[i] as StackableItem
+				).count;
+				inventoryData.splice(i, 1);
+				i--;
 			}
 		}
 	}

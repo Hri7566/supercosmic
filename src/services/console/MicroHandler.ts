@@ -22,7 +22,7 @@ export interface ChatMessage<T = unknown> {
 
 function onChildMessage(msg: ChatMessage) {
 	const consoleAgent = ServiceLoader.agents.find(
-		ag => ag.platform == "console"
+		ag => ag.platform === "console"
 	) as ConsoleAgent | undefined;
 
 	if (!consoleAgent) return;
@@ -34,7 +34,7 @@ function onChildMessage(msg: ChatMessage) {
 
 function onConsoleMessage(text: string) {
 	const consoleAgent = ServiceLoader.agents.find(
-		ag => ag.platform == "console"
+		ag => ag.platform === "console"
 	) as ConsoleAgent | undefined;
 
 	if (!consoleAgent) return;
@@ -77,7 +77,7 @@ export class MicroHandler {
 
 				for (let i in ServiceLoader.agents) {
 					const agent2 = ServiceLoader.agents[i];
-					if (agent2.platform == "mpp") {
+					if (agent2.platform === "mpp") {
 						agent.emit(
 							"log",
 							`${i} - ${agent2.platform} - ${
@@ -101,7 +101,7 @@ export class MicroHandler {
 					let walkie = agent as ConsoleAgent;
 					let talky = ServiceLoader.agents[index];
 
-					if (index == ServiceLoader.agents.indexOf(walkie))
+					if (index === ServiceLoader.agents.indexOf(walkie))
 						return "Why would you want to chat with yourself?";
 
 					// Remove old listeners

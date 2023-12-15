@@ -23,9 +23,9 @@ export function handlePermission(node1: string, node2: string) {
 
 	// Check nodes in order
 	for (let i = 0; i < hierarchy1.length; i++) {
-		if (hierarchy1[i] == hierarchy2[i]) {
+		if (hierarchy1[i] === hierarchy2[i]) {
 			// Last node?
-			if (i == hierarchy1.length - 1 || i == hierarchy2.length - 1) {
+			if (i === hierarchy1.length - 1 || i === hierarchy2.length - 1) {
 				return true;
 			} else {
 				continue;
@@ -33,8 +33,8 @@ export function handlePermission(node1: string, node2: string) {
 		}
 
 		// Wildcard?
-		if (hierarchy1[i] == "*") return true;
-		if (hierarchy2[i] == "*") return true;
+		if (hierarchy1[i] === "*") return true;
+		if (hierarchy2[i] === "*") return true;
 
 		return false;
 	}

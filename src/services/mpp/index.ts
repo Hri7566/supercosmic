@@ -80,7 +80,7 @@ export class MPPAgent extends ServiceAgent<Client> {
 
 			// Send message in chat
 			if (str) {
-				if (typeof str == "string") {
+				if (typeof str === "string") {
 					if (str.includes("\n")) {
 						let sp = str.split("\n");
 
