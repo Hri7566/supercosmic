@@ -50,3 +50,5 @@ export function loadCommands() {
 	]);
 	CommandHandler.addCommandGroup(utility);
 }
+
+export { CommandHandler, CommandGroup };

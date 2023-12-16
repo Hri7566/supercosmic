@@ -50,6 +50,10 @@ export class ServiceLoader {
 		this.agents.push(agent);
 	}
 
+	public static getAgent(index: number) {
+		return this.agents[index];
+	}
+
 	public static loadServices() {
 		if (config.enableMPP) {
 			for (const uri of Object.keys(mppConfig.agents)) {

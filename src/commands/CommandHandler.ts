@@ -46,7 +46,7 @@ export type BaseCommandMessage<T = unknown> = Omit<
 
 export class CommandHandler {
 	public static commandGroups = new Array<CommandGroup>();
-	public static prefixes = new Array<Prefix>();
+	public static prefixes = new Set<Prefix>();
 
 	public static logger = new Logger("Command Handler");
 
@@ -172,5 +172,5 @@ export class CommandHandler {
 
 // Add prefixes
 for (const prefix of prefixConfig.prefixes) {
-	CommandHandler.prefixes.push(prefix);
+	CommandHandler.prefixes.add(prefix);
 }

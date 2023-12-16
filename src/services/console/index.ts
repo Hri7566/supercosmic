@@ -37,7 +37,7 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 	public stop() {
 		if (!this.started) return;
 		this.started = false;
-		this.client.setPrompt("");
+		this.client.close();
 	}
 
 	protected bindEventListeners(): void {
