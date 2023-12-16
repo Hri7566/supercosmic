@@ -1,19 +1,18 @@
-import { loadCommands, CommandHandler, type CommandGroup } from "./commands";
+import { loadCommands, type CommandGroup } from "./commands";
+import { CommandHandler } from "./commands/CommandHandler";
 import { loadRoleConfig } from "./permissions";
 import { ServiceLoader } from "./services";
 import { ConsoleAgent } from "./services/console";
 import { printStartupASCII } from "./util/ascii";
 
+// Hot reload persistence
 declare global {
 	var loaded: boolean;
 	var serviceLoader: any;
-	var commandHandler: any;
 }
 
-// Set on first run
 globalThis.loaded ??= false;
 globalThis.serviceLoader ??= ServiceLoader;
-globalThis.commandHandler ??= CommandHandler;
 
 function load() {
 	printStartupASCII();

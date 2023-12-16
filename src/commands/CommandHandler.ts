@@ -174,3 +174,10 @@ export class CommandHandler {
 for (const prefix of prefixConfig.prefixes) {
 	CommandHandler.prefixes.add(prefix);
 }
+
+// Store commands for hot reload
+declare global {
+	var commandHandler: any;
+}
+
+globalThis.commandHandler ??= CommandHandler;

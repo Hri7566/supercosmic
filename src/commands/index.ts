@@ -1,5 +1,4 @@
 import { CommandGroup } from "./CommandGroup";
-import { CommandHandler } from "./CommandHandler";
 import { about } from "./commands/general/about";
 import { help } from "./commands/general/help";
 import { id } from "./commands/utility/id";
@@ -24,15 +23,15 @@ export function loadCommands() {
 	// cringe
 	const general = new CommandGroup("general", "⭐ General");
 	general.addCommands([help, about]);
-	CommandHandler.addCommandGroup(general);
+	globalThis.commandHandler.addCommandGroup(general);
 
 	const economy = new CommandGroup("economy", "💸 Economy");
 	economy.addCommands([inventory, balance, tree, pick, grow]);
-	CommandHandler.addCommandGroup(economy);
+	globalThis.commandHandler.addCommandGroup(economy);
 
 	const fun = new CommandGroup("fun", "✨ Fun");
 	fun.addCommands([magic8ball]);
-	CommandHandler.addCommandGroup(fun);
+	globalThis.commandHandler.addCommandGroup(fun);
 
 	const utility = new CommandGroup("utility", "🔨 Utility");
 	utility.addCommands([
@@ -48,7 +47,7 @@ export function loadCommands() {
 		permissions,
 		branch
 	]);
-	CommandHandler.addCommandGroup(utility);
+	globalThis.commandHandler.addCommandGroup(utility);
 }
 
-export { CommandHandler, CommandGroup };
+export { CommandGroup };
