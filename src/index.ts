@@ -23,23 +23,27 @@ function load() {
 	globalThis.loaded = true;
 }
 
-// Check for hot reload
-if (!globalThis.loaded) {
-	load();
-	console.log("Command list:", globalThis.commandHandler.commandGroups);
-} else {
-	console.log("Hot reload triggered...");
-	// Set console prompt
-	globalThis.serviceLoader.agents.forEach(agent => {
-		if (agent.platform === "console")
-			(agent as ConsoleAgent).client.prompt();
-	});
+function reload() {
+	console.log("Reloading...");
 
 	// Reload commands
 	globalThis.commandHandler.commandGroups = new Array<CommandGroup>();
 	loadCommands();
 
-	console.log("Command list:", globalThis.commandHandler.commandGroups);
+	// Set console prompt
+	globalThis.serviceLoader.agents.forEach(agent => {
+		if (agent.platform === "console")
+			(agent as ConsoleAgent).client.prompt();
+	});
+}
+
+// Check for hot reload
+if (!globalThis.loaded) {
+	load();
+} else {
+	console.clear();
+	console.log("Hot reload triggered");
+	reload();
 }
 
 export function scopedEval(code: string) {
