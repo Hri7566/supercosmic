@@ -1,5 +1,5 @@
 debug: true
 enableConsole: true
-enableMPP: false
+enableMPP: true
 enableDiscord: false
 enableSwitchChat: false
