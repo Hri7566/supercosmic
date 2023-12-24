@@ -46,7 +46,7 @@ export function loadConfig<T>(configPath: string, defaultConfig: T): T {
 		}
 
 		// Apply any missing default values
-		mix(config, defRecord);
+		// mix(config, defRecord);
 
 		// Save config if modified
 		if (changed) writeConfig(configPath, config);

@@ -66,7 +66,12 @@ export function hasPermission(role: Role, permission: string) {
 	return false;
 }
 
-export const roles = new Map<Role, TRole>();
+declare global {
+	var roles: Map<Role, TRole>;
+}
+
+globalThis.roles ??= new Map<Role, TRole>();
+export const roles = globalThis.roles;
 
 export type TRole = {
 	displayName: string;

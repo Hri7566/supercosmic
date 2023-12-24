@@ -30,6 +30,10 @@ function reload() {
 	globalThis.commandHandler.commandGroups = new Array<CommandGroup>();
 	loadCommands();
 
+	// Reload services
+	globalThis.serviceLoader.unloadServices();
+	globalThis.serviceLoader.loadServices();
+
 	// Set console prompt
 	globalThis.serviceLoader.agents.forEach(agent => {
 		if (agent.platform === "console")

@@ -100,4 +100,11 @@ export class ServiceLoader {
 			this.addAgent(consoleAgent);
 		}
 	}
+
+	public static unloadServices() {
+		for (const agent of this.agents) {
+			agent.stop();
+			this.agents.splice(this.agents.indexOf(agent), 1);
+		}
+	}
 }

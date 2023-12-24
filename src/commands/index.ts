@@ -18,6 +18,7 @@ import { branch } from "./commands/utility/branch";
 import { tree } from "./commands/economy/tree";
 import { pick } from "./commands/economy/pick";
 import { grow } from "./commands/economy/grow";
+import { delinv } from "./commands/utility/delinv";
 
 export function loadCommands() {
 	// cringe
@@ -45,7 +46,8 @@ export function loadCommands() {
 		ic,
 		uptime,
 		permissions,
-		branch
+		branch,
+		delinv
 	]);
 	globalThis.commandHandler.addCommandGroup(utility);
 }

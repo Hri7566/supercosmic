@@ -50,3 +50,17 @@ export async function updateInventory(data: Omit<Inventory, "id">) {
 export async function deleteInventory(userId: Inventory["userId"]) {
 	return await prisma.inventory.delete({ where: { userId } });
 }
+
+export async function addItem<T extends Item>(userId: Inventory["userId"], item: T) {
+	let inventory = await readInventory(userId);
+	if (!inventory) return false;
+
+	console.log(inventory.items);
+
+	inventory.items = JSON.stringify(JSON.parse(inventory.items as string).push(item));
+	collapseInventory(inventory.items as unknown as Item[]);
+
+	await updateInventory(inventory);
+
+	return true;
+}

@@ -56,7 +56,7 @@ export class DiscordAgent extends ServiceAgent<Discord.Client> {
 
 			let args = msg.content.split(" ");
 
-			const str = await CommandHandler.handleCommand(
+			const str = await globalThis.commandHandler.handleCommand(
 				{
 					m: "command",
 					a: msg.content,

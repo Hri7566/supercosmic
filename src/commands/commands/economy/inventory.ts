@@ -7,9 +7,9 @@ export const inventory = new Command(
 	"get bozo's inventory",
 	"inventory",
 	msg => {
-		const items = msg.inventory.items as unknown as Item[];
-		console.log(msg.inventory);
-		const list = items
+		const items = msg.inventory.items as string;
+		console.log(items);
+		const list = JSON.parse(items)
 			.map(
 				i =>
 					`${i.name}${

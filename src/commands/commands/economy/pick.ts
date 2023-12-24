@@ -1,7 +1,7 @@
 import { JsonArray, JsonValue } from "@prisma/client/runtime/library";
 import { KekklefruitTree } from "../../../economy/kekkle";
 import { Command } from "../../Command";
-import { updateInventory } from "../../../data/inventory";
+import { addItem, updateInventory } from "../../../data/inventory";
 
 export const pick = new Command(
 	"pick",
@@ -14,10 +14,7 @@ export const pick = new Command(
 		if (!fruit)
 			return `There are not enough fruit on the kekklefruit tree.`;
 
-		(msg.inventory.items as JsonArray).push(fruit as unknown as JsonValue);
-		console.log("updating inventory");
-		await updateInventory(msg.inventory);
-
+		addItem(msg.p._id, fruit);
 		return `(insert random boring message about ${fruit.name} here)`;
 	}
 );

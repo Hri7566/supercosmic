@@ -61,7 +61,7 @@ export class MPPAgent extends ServiceAgent<Client> {
 			let args = msg.a.split(" ");
 
 			// Run command and get output
-			const str = await CommandHandler.handleCommand(
+			const str = await globalThis.commandHandler.handleCommand(
 				{
 					m: "command",
 					a: msg.a,

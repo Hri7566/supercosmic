@@ -65,7 +65,10 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 			if (text.startsWith("/")) {
 				out = await MicroHandler.handleMicroCommand(message, this);
 			} else {
-				out = await CommandHandler.handleCommand(message, this);
+				out = await globalThis.commandHandler.handleCommand(
+					message,
+					this
+				);
 			}
 
 			if (out) {
