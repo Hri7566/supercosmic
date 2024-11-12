@@ -32,12 +32,14 @@ export class ConsoleAgent extends ServiceAgent<readline.ReadLine> {
 		this.started = true;
 		this.client.setPrompt("> ");
 		this.client.prompt(true);
+		(globalThis as any).readline = this.client;
 	}
 
 	public stop() {
 		if (!this.started) return;
 		this.started = false;
 		this.client.close();
+		delete (globalThis as any).readline;
 	}
 
 	protected bindEventListeners(): void {

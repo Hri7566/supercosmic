@@ -9,6 +9,8 @@ export const defaultConfig = {
 
 			"cosmic.command.inventory",
 			"cosmic.command.balance",
+			"cosmic.command.bake",
+			"cosmic.command.eat",
 
 			"cosmic.command.magic8ball",
 

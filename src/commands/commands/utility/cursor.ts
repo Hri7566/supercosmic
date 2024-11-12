@@ -1,4 +1,4 @@
-import type { MPPAgent } from "../../../services/mpp";
+import type { MPPNetAgent } from "../../../services/mppnet";
 import { Command } from "../../Command";
 
 export const cursor = new Command(
@@ -10,7 +10,7 @@ export const cursor = new Command(
 		if (agent.platform !== "mpp") return;
 		if (!msg.argv[1]) return "Specify a mode.";
 
-		const cursor = (agent as MPPAgent).cursor;
+		const cursor = (agent as MPPNetAgent).cursor;
 		cursor.props.currentAnimation = msg.argv[1];
 	}
 );

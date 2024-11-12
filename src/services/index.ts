@@ -1,4 +1,4 @@
-import { MPPAgent } from "./mpp";
+import { MPPNetAgent } from "./mppnet";
 import env from "../util/env";
 import { ServiceAgent } from "./ServiceAgent";
 import { loadConfig } from "../util/config";
@@ -58,14 +58,14 @@ export class ServiceLoader {
 		if (config.enableMPP) {
 			for (const uri of Object.keys(mppConfig.agents)) {
 				for (const channel of mppConfig.agents[uri]) {
-					const mppAgent = new MPPAgent(
+					const mppAgent = new MPPNetAgent(
 						uri,
 						channel.id,
 						channel.overrideName
 							? {
-									name: channel.overrideName,
-									color: mppConfig.desiredUser.color
-							  }
+								name: channel.overrideName,
+								color: mppConfig.desiredUser.color
+							}
 							: mppConfig.desiredUser,
 						env.MPPNET_TOKEN,
 						config.debug
@@ -106,5 +106,9 @@ export class ServiceLoader {
 			agent.stop();
 			this.agents.splice(this.agents.indexOf(agent), 1);
 		}
+	}
+
+	public static getAgentId(agent: ServiceAgent<unknown>) {
+		return this.agents.indexOf(agent);
 	}
 }

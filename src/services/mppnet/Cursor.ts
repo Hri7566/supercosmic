@@ -1,4 +1,4 @@
-import { MPPAgent } from ".";
+import { MPPNetAgent } from ".";
 
 interface Vector2 {
 	x: number;
@@ -20,12 +20,22 @@ interface CursorProps {
 }
 
 export class Cursor {
+	public static animations = new Map<string, (cursor: Cursor) => void>();
+
 	public visible: boolean = true;
 	public displayInterval: NodeJS.Timeout;
 	public updateInterval: NodeJS.Timeout;
 
+	public animationLoop = [
+		"bounce",
+		"bounce2",
+		"constrained",
+		"lemniscate",
+		"test",
+	];
+
 	public props: CursorProps = {
-		currentAnimation: "lemniscate",
+		currentAnimation: this.animationLoop[0],
 		position: {
 			x: 50,
 			y: 50
@@ -50,7 +60,7 @@ export class Cursor {
 		following: ""
 	};
 
-	constructor(public agent: MPPAgent) {
+	constructor(public agent: MPPNetAgent) {
 		this.displayInterval = setInterval(() => {
 			if (
 				this.props.oldPosition.x !== this.props.position.x ||
@@ -65,6 +75,13 @@ export class Cursor {
 				]);
 			}
 		}, 1000 / 20);
+
+		let animationIndex = 0;
+		const animationInterval = setInterval(() => {
+			animationIndex++;
+			if (animationIndex >= this.animationLoop.length) animationIndex = 0;
+			this.props.currentAnimation = this.animationLoop[animationIndex];
+		}, 10000);
 
 		this.updateInterval = setInterval(() => {
 			switch (this.props.currentAnimation) {
@@ -87,6 +104,11 @@ export class Cursor {
 						this.props.acceleration.x * this.props.dt;
 					this.props.velocity.y +=
 						this.props.acceleration.y * this.props.dt;
+
+					if (this.props.velocity.x > 50) this.props.velocity.x = 50;
+					if (this.props.velocity.x < -50) this.props.velocity.x = -50;
+					if (this.props.velocity.y > 50) this.props.velocity.y = 50;
+					if (this.props.velocity.y < -50) this.props.velocity.y = -50;
 
 					this.props.position.x +=
 						this.props.velocity.x * this.props.dt;
@@ -135,7 +157,7 @@ export class Cursor {
 
 					if (this.props.position.y < 75) {
 						this.props.acceleration.y =
-							Math.random() * 100 - 50 - this.props.gravity;
+							((Math.random() * 50) - 25) - this.props.gravity;
 					} else {
 						this.props.acceleration.y = -(Math.random() * 50);
 					}
@@ -239,7 +261,7 @@ export class Cursor {
 						50;
 					this.props.position.y =
 						Math.sin(this.props.angles[0] * (Math.PI / 180) * 3) *
-							10 +
+						10 +
 						50;
 
 					break;
@@ -254,7 +276,7 @@ export class Cursor {
 						50;
 					this.props.position.y =
 						Math.sin(this.props.angles[0] * (Math.PI / 180) * 2) *
-							10 +
+						10 +
 						50;
 
 					break;
@@ -296,7 +318,7 @@ export class Cursor {
 
 					break;
 			}
-		}, 1000 / 60);
+		}, 1500 / 60);
 	}
 
 	public show() {

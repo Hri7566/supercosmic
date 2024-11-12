@@ -18,9 +18,7 @@ export const permissions = new Command(
 		if (msg.argv[1]) role = fuzzyFindRoleByDisplayName(msg.argv[1]);
 
 		if (role) {
-			return `Permissions for role "${
-				role.displayName
-			}": ${role.permissions.join(" | ")}`;
+			return `Permissions for role \`${role.displayName}\`: \`${role.permissions.join("\` | \`")}\``;
 		} else {
 			return `No role found.`;
 		}

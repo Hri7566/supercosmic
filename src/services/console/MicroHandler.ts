@@ -6,7 +6,8 @@ import { BaseCommandMessage } from "../../commands/CommandHandler";
 import { readUser, updateUser } from "../../data/user";
 import { CosmicColor } from "../../util/CosmicColor";
 import { ServiceAgent } from "../ServiceAgent";
-import { MPPAgent } from "../mpp";
+import { MPPNetAgent } from "../mppnet";
+import { readFileSync } from "fs";
 
 export interface ChatMessage<T = unknown> {
 	m: "a";
@@ -55,7 +56,7 @@ export class MicroHandler {
 			case "commands":
 			case "cmds":
 			default:
-				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview | /admin+ <id> | /admin- <id> | /owner+ <id>";
+				return "Microcommands: /help | /js <expr> | /exit | /list | /view <index> | /unview | /admin+ <id> | /admin- <id> | /owner+ <id> | /owner- <id>";
 				break;
 			case "js":
 			case "eval":
@@ -80,8 +81,7 @@ export class MicroHandler {
 					if (agent2.platform === "mpp") {
 						agent.emit(
 							"log",
-							`${i} - ${agent2.platform} - ${
-								(agent2 as MPPAgent).desiredChannel
+							`${i} - ${agent2.platform} - ${(agent2 as MPPNetAgent).desiredChannel
 							}`
 						);
 					} else {
@@ -150,11 +150,10 @@ export class MicroHandler {
 				if (conAg.viewAgent.platform !== "mpp")
 					return "The view agent is not on MPP.";
 
-				const ppl = (conAg.viewAgent as MPPAgent).client.ppl;
+				const ppl = (conAg.viewAgent as MPPNetAgent).client.ppl;
 				return `MPP Users: ${Object.values(ppl).map(
 					p =>
-						`\n - ${p._id} (user) / ${p.id} (part): ${p.name} (${
-							p.color
+						`\n - ${p._id} (user) / ${p.id} (part): ${p.name} (${p.color
 						}, ${new CosmicColor(p.color).getName()})`
 				)}`;
 				break;
@@ -205,6 +204,22 @@ export class MicroHandler {
 					0,
 					6
 				)}...] an owner`;
+				break;
+			case "owner-":
+				const userId4 = command.argv
+					.slice(1, command.argv.length)
+					.join(" ");
+
+				let user4 = await readUser(userId4);
+				if (!user4) return "No such user.";
+
+				user4.role = Role.NONE;
+				await updateUser(user4);
+
+				return `Made user "${user4.name}" [${user4.platformId.substring(
+					0,
+					6
+				)}] a normal user.`;
 				break;
 		}
 	}

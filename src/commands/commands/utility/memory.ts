@@ -6,10 +6,12 @@ export const memory = new Command(
 	"get the memory bozo",
 	"memory",
 	() => {
-		return `${(process.memoryUsage().heapUsed / 1000 / 1000).toFixed(
-			2
-		)} MB used / ${(process.memoryUsage().heapTotal / 1000 / 1000).toFixed(
-			2
-		)} MB total`;
+		const mem = process.memoryUsage();
+
+		return `${(mem.heapUsed / 1000 / 1000).toFixed(2)} MB / ${(
+			mem.heapTotal /
+			1000 /
+			1000
+		).toFixed(2)} MB / ${(mem.rss / 1000 / 1000).toFixed(2)} MB`;
 	}
 );

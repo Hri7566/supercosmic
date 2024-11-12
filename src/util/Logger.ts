@@ -17,6 +17,8 @@ export function padNum(
 
 export class Logger {
 	private static log(method: string, ...args: any[]) {
+		process.stdout.write(`\x1b[2K\r`);
+
 		(console as unknown as Record<string, (..._args: any[]) => any>)[
 			method
 		](
@@ -24,6 +26,10 @@ export class Logger {
 			unimportant(this.getHHMMSSMS()),
 			...args
 		);
+
+		if ((globalThis as any).readline) {
+			(globalThis as any).readline.prompt();
+		}
 	}
 
 	public static getHHMMSSMS() {

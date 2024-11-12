@@ -8,5 +8,6 @@ export const tree = new Command(
 	"tree",
 	async msg => {
 		return `There are ${KekklefruitTree.getFruitCount()} kekklefruit on the tree.`;
-	}
+	},
+	false
 );

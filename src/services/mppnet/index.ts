@@ -5,7 +5,7 @@ import { Cursor } from "./Cursor";
 import { ChatMessage } from "../console/MicroHandler";
 import { help as helpCommand } from "../../commands/commands/general/help";
 
-export class MPPAgent extends ServiceAgent<Client> {
+export class MPPNetAgent extends ServiceAgent<Client> {
 	public cursor: Cursor;
 
 	constructor(
@@ -18,6 +18,7 @@ export class MPPAgent extends ServiceAgent<Client> {
 		const cl = new Client(uri, token);
 		super("mpp", cl);
 		this.cursor = new Cursor(this);
+		this.cursor.show();
 	}
 
 	public start() {
@@ -33,11 +34,14 @@ export class MPPAgent extends ServiceAgent<Client> {
 
 		this.client.on("hi", msg => {
 			this.client.setChannel(this.desiredChannel);
+		});
+
+		this.client.on("ch", msg => {
 			this.fixUser();
 		});
 
 		this.client.on("t", msg => {
-			this.fixUser();
+			// this.fixUser();
 		});
 
 		this.client.on("a", async msg => {

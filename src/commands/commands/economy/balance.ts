@@ -8,6 +8,6 @@ export const balance = new Command(
 	"balance",
 	msg => {
 		const bal = msg.inventory.balance;
-		return `Balance: ${formatBalance(bal)}`;
+		return `Your balance: ${formatBalance(bal)}`;
 	}
 );

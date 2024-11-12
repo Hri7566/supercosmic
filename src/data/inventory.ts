@@ -16,14 +16,51 @@ export async function readInventory(userId: Inventory["userId"]) {
 	return await prisma.inventory.findUnique({ where: { userId: userId } });
 }
 
+export async function readItems(userId: Inventory["userId"]) {
+	const inv = await readInventory(userId);
+	if (!inv) return null;
+
+	console.log("bruh", inv.items, "end bruh");
+
+	// prisma why? pick one!!!
+	if (typeof inv.items !== "string") return inv.items as unknown as Item[];
+	return JSON.parse(inv.items) as Item[];
+}
+
 export function collapseInventory(inventoryData: Item[]) {
+	let newItems: Item[] = [];
+
+	oldLoop:
+	for (let i of inventoryData) {
+		let found = false;
+
+		newLoop:
+		for (let j of newItems) {
+			if (i.id === j.id) {
+				// Merge
+				if (
+					typeof (i as StackableItem).count === "number" &&
+					typeof (j as StackableItem).count === "number"
+				) {
+					(i as StackableItem).count += (j as StackableItem).count;
+				}
+
+				found = true;
+				break newLoop;
+			}
+		}
+
+		// Add
+		if (!found) newItems.push(i);
+	}
+
 	for (let i = 0; i < inventoryData.length; i++) {
 		if (i <= 0) continue;
 
 		if (inventoryData[i].id === inventoryData[i - 1].id) {
 			if (
 				typeof (inventoryData[i - 1] as StackableItem).count ===
-					"number" &&
+				"number" &&
 				typeof (inventoryData[i] as StackableItem).count === "number"
 			) {
 				(inventoryData[i - 1] as StackableItem).count += (
@@ -42,7 +79,7 @@ export async function updateInventory(data: Omit<Inventory, "id">) {
 		where: { userId: data.userId },
 		data: {
 			balance: data.balance,
-			items: JSON.stringify(data.items)
+			items: data.items as JsonArray
 		}
 	});
 }
@@ -51,14 +88,44 @@ export async function deleteInventory(userId: Inventory["userId"]) {
 	return await prisma.inventory.delete({ where: { userId } });
 }
 
-export async function addItem<T extends Item>(userId: Inventory["userId"], item: T) {
+export async function addItem<T extends Item>(
+	userId: Inventory["userId"],
+	item: T
+) {
 	let inventory = await readInventory(userId);
 	if (!inventory) return false;
 
-	console.log(inventory.items);
-
-	inventory.items = JSON.stringify(JSON.parse(inventory.items as string).push(item));
+	(inventory.items as unknown as Item[]).push(item);
 	collapseInventory(inventory.items as unknown as Item[]);
+
+	await updateInventory(inventory);
+
+	return true;
+}
+
+export async function subtractItem<T extends Item>(
+	userId: Inventory["userId"],
+	item: T
+) {
+	let inventory = await readInventory(userId);
+	if (!inventory) return false;
+
+	if ((item as unknown as StackableItem).count) {
+		const it = (inventory.items as unknown as Item[]).find(
+			it => it.id == item.id
+		);
+		if (!it) return false;
+		(it as StackableItem).count--;
+	} else {
+		const it = (inventory.items as unknown as Item[]).find(
+			it => it.id == item.id
+		);
+		if (!it) return false;
+		(inventory.items as unknown as Item[]).splice(
+			(inventory.items as unknown as Item[]).indexOf(it),
+			1
+		);
+	}
 
 	await updateInventory(inventory);
 

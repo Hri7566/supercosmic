@@ -1,6 +1,6 @@
 import { get, set } from "../data/prisma";
 import { Logger } from "../util/Logger";
-import { FoodItem } from "./Item";
+import type { FoodItem, StackableItem } from "./Item";
 
 export class KekklefruitTree {
 	protected static fruit: number = 0;
@@ -47,8 +47,9 @@ export class KekklefruitTree {
 			id: "kekklefruit",
 			name: "Kekklefruit",
 			consumable: true,
-			edible: true
-		} as FoodItem;
+			edible: true,
+			count: 1
+		} as FoodItem & StackableItem;
 	}
 }
 

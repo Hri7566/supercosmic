@@ -16,5 +16,6 @@ export const pick = new Command(
 
 		addItem(msg.p._id, fruit);
 		return `(insert random boring message about ${fruit.name} here)`;
-	}
+	},
+	false
 );

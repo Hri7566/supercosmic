@@ -19,6 +19,9 @@ import { tree } from "./commands/economy/tree";
 import { pick } from "./commands/economy/pick";
 import { grow } from "./commands/economy/grow";
 import { delinv } from "./commands/utility/delinv";
+import { eat } from "./commands/fun/eat";
+import { bake } from "./commands/economy/bake";
+import { crown } from "./commands/utility/crown";
 
 export function loadCommands() {
 	// cringe
@@ -27,11 +30,11 @@ export function loadCommands() {
 	globalThis.commandHandler.addCommandGroup(general);
 
 	const economy = new CommandGroup("economy", "💸 Economy");
-	economy.addCommands([inventory, balance, tree, pick, grow]);
+	economy.addCommands([inventory, balance, tree, pick, grow, bake]);
 	globalThis.commandHandler.addCommandGroup(economy);
 
 	const fun = new CommandGroup("fun", "✨ Fun");
-	fun.addCommands([magic8ball]);
+	fun.addCommands([magic8ball, eat]);
 	globalThis.commandHandler.addCommandGroup(fun);
 
 	const utility = new CommandGroup("utility", "🔨 Utility");
@@ -47,7 +50,8 @@ export function loadCommands() {
 		uptime,
 		permissions,
 		branch,
-		delinv
+		delinv,
+		crown
 	]);
 	globalThis.commandHandler.addCommandGroup(utility);
 }
